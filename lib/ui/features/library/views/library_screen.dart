@@ -401,28 +401,18 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primary, AppColors.primaryPressed],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColors.primaryGlow,
-                      blurRadius: 10,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
+                  border: Border.all(color: AppColors.border, width: 1),
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    'F',
-                    style: TextStyle(
+                    'FH',
+                    style: GoogleFonts.newsreader(
                       color: Colors.white,
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w900,
-                      fontFamily: 'Georgia',
+                      letterSpacing: -0.5,
                     ),
                   ),
                 ),
