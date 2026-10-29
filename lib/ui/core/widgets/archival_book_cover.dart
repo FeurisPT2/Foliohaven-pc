@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../domain/models/book.dart';
 import '../constants/app_colors.dart';
 
@@ -16,17 +17,17 @@ class ArchivalBookCover extends StatelessWidget {
     this.onTap,
   });
 
-  Color _getClothColor() {
+  List<Color> _getCoverGradient() {
     switch (book.format.toUpperCase()) {
       case 'EPUB':
-        return const Color(0xFF1E293B); // Slate Navy
+        return const [Color(0xFF1E2D4A), Color(0xFF111A2E)];
       case 'PDF':
-        return const Color(0xFF3C1F1E); // Burgundy Clay
+        return const [Color(0xFF451E1D), Color(0xFF261010)];
       case 'MOBI':
-        return const Color(0xFF1E2E24); // Forest Leather
+        return const [Color(0xFF1B3828), Color(0xFF0F2117)];
       case 'TXT':
       default:
-        return const Color(0xFF292524); // Dark Charcoal
+        return const [Color(0xFF38291F), Color(0xFF201610)];
     }
   }
 
@@ -46,8 +47,9 @@ class ArchivalBookCover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final clothColor = _getClothColor();
+    final gradient = _getCoverGradient();
     final badgeColor = _getBadgeColor();
+    final progress = (book.progressPercent / 100.0).clamp(0.0, 1.0);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -57,33 +59,53 @@ class ArchivalBookCover extends StatelessWidget {
           width: width,
           height: height,
           decoration: BoxDecoration(
-            color: clothColor,
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: const Color(0xFF44403C), width: 1.5),
+            gradient: LinearGradient(
+              colors: gradient,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(8),
+              bottomRight: Radius.circular(8),
+              topLeft: Radius.circular(3),
+              bottomLeft: Radius.circular(3),
+            ),
+            border: Border.all(color: const Color(0x38FFFFFF), width: 1.0),
             boxShadow: const [
               BoxShadow(
-                color: Color(0x33000000),
-                blurRadius: 10,
-                offset: Offset(0, 4),
+                color: Color(0x55000000),
+                blurRadius: 12,
+                offset: Offset(4, 6),
+              ),
+              BoxShadow(
+                color: Color(0x22C2410C),
+                blurRadius: 2,
+                offset: Offset(0, 1),
               ),
             ],
           ),
           child: Stack(
             children: [
-              // 3D Spine Shadow on left margin
+              // 1. Realistic Book Spine Crease & Shadow (Left edge)
               Positioned(
                 left: 0,
                 top: 0,
                 bottom: 0,
-                width: 12,
+                width: 14,
                 child: Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      bottomLeft: Radius.circular(4),
+                      topLeft: Radius.circular(3),
+                      bottomLeft: Radius.circular(3),
                     ),
                     gradient: LinearGradient(
-                      colors: [Color(0x99000000), Color(0x00000000)],
+                      colors: [
+                        Color(0xB3000000),
+                        Color(0x22000000),
+                        Color(0x33FFFFFF),
+                        Color(0x00000000),
+                      ],
+                      stops: [0.0, 0.45, 0.6, 1.0],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
@@ -91,15 +113,38 @@ class ArchivalBookCover extends StatelessWidget {
                 ),
               ),
 
-              // Inner Frame Border
+              // 2. Subtle Lighting Sheen (Top-to-bottom diagonal sheen)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                      topLeft: Radius.circular(3),
+                      bottomLeft: Radius.circular(3),
+                    ),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.white.withValues(alpha: 0.08),
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.35),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              ),
+
+              // 3. Inner Embossed Decorative Frame
               Positioned.fill(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(left: 14, top: 10, right: 10, bottom: 10),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(4),
                       border: Border.all(
-                        color: const Color(0x28D6D3D1),
+                        color: const Color(0x38D4AF37), // Subtle gold foil outline
                         width: 1.0,
                       ),
                     ),
@@ -107,57 +152,90 @@ class ArchivalBookCover extends StatelessWidget {
                 ),
               ),
 
-              // Format Pill Badge (Top Right)
+              // 4. Bookmark Ribbon (Top edge)
               Positioned(
-                top: 12,
-                right: 12,
+                top: 0,
+                left: 28,
+                child: CustomPaint(
+                  size: const Size(14, 22),
+                  painter: _RibbonPainter(
+                    color: book.isFavorite ? AppColors.starGold : AppColors.primary,
+                  ),
+                ),
+              ),
+
+              // 5. Format Badge (Top Right Pill)
+              Positioned(
+                top: 10,
+                right: 10,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
                   decoration: BoxDecoration(
-                    color: badgeColor,
-                    borderRadius: BorderRadius.circular(3),
+                    color: badgeColor.withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x33000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
                   ),
                   child: Text(
                     book.format.toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 8,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w800,
                       letterSpacing: 0.5,
                     ),
                   ),
                 ),
               ),
 
-              // Content Area: Title, Divider, Author
+              // 6. Centered Title & Author (Classical Typography)
               Positioned.fill(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                  padding: const EdgeInsets.only(left: 22, right: 18, top: 24, bottom: 20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 18),
-                      // Title
+                      // Book Title
                       Text(
                         book.title,
                         textAlign: TextAlign.center,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Color(0xFFF5F0EB),
-                          fontFamily: 'Georgia',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                        style: GoogleFonts.newsreader(
+                          color: const Color(0xFFFAF7F2),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
                           height: 1.25,
+                          shadows: const [
+                            Shadow(
+                              color: Color(0x88000000),
+                              offset: Offset(0, 1),
+                              blurRadius: 3,
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 8),
 
-                      // Terracotta Divider
+                      // Golden/Terracotta Accent Divider
                       Container(
-                        width: 32,
+                        width: 28,
                         height: 1.5,
-                        color: AppColors.primary,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(1),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: AppColors.primaryGlow,
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 8),
 
@@ -167,10 +245,11 @@ class ArchivalBookCover extends StatelessWidget {
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Color(0xFFA8A29E),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
+                        style: GoogleFonts.plusJakartaSans(
+                          color: const Color(0xFFC7BFB5),
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.2,
                         ),
                       ),
                     ],
@@ -178,26 +257,37 @@ class ArchivalBookCover extends StatelessWidget {
                 ),
               ),
 
-              // Progress Bar at bottom
+              // 7. Reading Progress Bar & Status (Bottom)
               Positioned(
-                left: 14,
+                left: 18,
                 right: 14,
-                bottom: 12,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(2),
-                  child: Container(
-                    height: 4,
-                    color: const Color(0xFF171514),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: FractionallySizedBox(
-                        widthFactor: (book.progressPercent / 100.0).clamp(0.0, 1.0),
-                        child: Container(
-                          color: AppColors.primaryHover,
+                bottom: 10,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: Container(
+                        height: 3.5,
+                        color: Colors.black.withValues(alpha: 0.5),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FractionallySizedBox(
+                            widthFactor: progress,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: progress >= 1.0
+                                      ? [AppColors.success, const Color(0xFF34D399)]
+                                      : [AppColors.primary, AppColors.primaryHover],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
@@ -206,4 +296,36 @@ class ArchivalBookCover extends StatelessWidget {
       ),
     );
   }
+}
+
+class _RibbonPainter extends CustomPainter {
+  final Color color;
+  const _RibbonPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width, size.height)
+      ..lineTo(size.width / 2, size.height - 4)
+      ..lineTo(0, size.height)
+      ..close();
+
+    canvas.drawPath(path, paint);
+
+    // Subtle edge shadow
+    final shadowPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.25)
+      ..strokeWidth = 0.8
+      ..style = PaintingStyle.stroke;
+    canvas.drawPath(path, shadowPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _RibbonPainter oldDelegate) => oldDelegate.color != color;
 }

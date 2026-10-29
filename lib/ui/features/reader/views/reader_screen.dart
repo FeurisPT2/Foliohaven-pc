@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import 'package:foliohaven_flutter/domain/models/book.dart';
@@ -207,7 +208,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.canvas,
         drawer: TocDrawer(
           tocItems: _tocItems,
           onSelectPage: (p) => readerNotifier.setPage(p),
@@ -296,7 +297,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
   Widget _buildPdfViewer(ReaderState state, ReaderNotifier notifier) {
     return Container(
-      color: AppColors.background,
+      color: AppColors.canvas,
       child: SfPdfViewer.file(
         File(widget.book.filePath),
         initialPageNumber: state.currentPage,
@@ -319,7 +320,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         }
       },
       child: Container(
-        color: AppColors.background,
+        color: AppColors.canvas,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -360,13 +361,13 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     return Container(
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: border, width: 1),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x33000000),
-            blurRadius: 16,
-            offset: Offset(0, 4),
+            color: Color(0x40000000),
+            blurRadius: 20,
+            offset: Offset(0, 6),
           ),
         ],
       ),
@@ -379,7 +380,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             children: [
               Text(
                 'Chapter / Page $pageNum',
-                style: const TextStyle(
+                style: GoogleFonts.plusJakartaSans(
                   color: AppColors.primaryHover,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -406,17 +407,16 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Main Reading Content
+          // Main Reading Content (Refined editorial typography with Newsreader)
           Expanded(
             child: _isLoadingContent
                 ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
                 : SingleChildScrollView(
                     child: SelectableText(
                       readingText,
-                      style: TextStyle(
-                        fontFamily: 'Georgia',
+                      style: GoogleFonts.newsreader(
                         fontSize: state.fontSize,
-                        height: 1.7, // Optimal reading line-height
+                        height: 1.7, // Optimal editorial reading line-height
                         color: text,
                       ),
                     ),
@@ -427,10 +427,11 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           Center(
             child: Text(
               '$pageNum',
-              style: TextStyle(
+              style: GoogleFonts.newsreader(
                 color: text.withValues(alpha: 0.5),
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
+                fontStyle: FontStyle.italic,
               ),
             ),
           ),
@@ -450,13 +451,13 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
               : Container(
                   decoration: BoxDecoration(
                     color: _canvasBg(theme),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: _canvasBorder(theme), width: 1),
                   ),
                   child: Center(
                     child: Text(
                       '(End of publication)',
-                      style: TextStyle(
+                      style: GoogleFonts.newsreader(
                         fontStyle: FontStyle.italic,
                         color: _canvasText(theme).withValues(alpha: 0.5),
                       ),
@@ -476,16 +477,16 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(18),
-          hoverColor: AppColors.primary,
+          hoverColor: AppColors.primarySubtle,
           child: Container(
             width: 36,
             height: 72,
             decoration: BoxDecoration(
-              color: const Color(0x731E1B19),
+              color: AppColors.surface.withValues(alpha: 0.8),
               borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: const Color(0x4D57534E), width: 1),
+              border: Border.all(color: AppColors.border, width: 1),
             ),
-            child: Icon(icon, color: const Color(0xFFD6D3D1), size: 22),
+            child: Icon(icon, color: AppColors.textPrimary, size: 22),
           ),
         ),
       ),

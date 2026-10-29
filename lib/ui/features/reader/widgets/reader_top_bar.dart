@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:foliohaven_flutter/ui/core/constants/app_colors.dart';
 
 class ReaderTopBar extends StatelessWidget {
@@ -37,88 +38,126 @@ class ReaderTopBar extends StatelessWidget {
     required this.onToggleTts,
   });
 
+  Color _badgeColor(String fmt) {
+    switch (fmt.toUpperCase()) {
+      case 'EPUB':
+        return AppColors.badgeEpub;
+      case 'PDF':
+        return AppColors.badgePdf;
+      case 'MOBI':
+        return AppColors.badgeMobi;
+      default:
+        return AppColors.badgeTxt;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final badgeColor = _badgeColor(format);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: const BoxDecoration(
         color: AppColors.sidebarBg,
-        border: Border(bottom: BorderSide(color: Color(0xFF292524), width: 1)),
+        border: Border(bottom: BorderSide(color: AppColors.borderSubtle, width: 1)),
       ),
       child: Row(
         children: [
-          // Cluster 1 (Left): Back to Library & Book Identity
+          // Left: Return to Library
           TextButton.icon(
             onPressed: onBack,
             style: TextButton.styleFrom(
-              foregroundColor: const Color(0xFFD6D3D1),
-              backgroundColor: const Color(0xFF24201E),
+              foregroundColor: AppColors.textPrimary,
+              backgroundColor: AppColors.surface,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),
-                side: const BorderSide(color: Color(0xFF3D3835)),
+                side: const BorderSide(color: AppColors.border),
               ),
             ),
             icon: const Icon(Icons.arrow_back, size: 14),
-            label: const Text('Library', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+            label: Text(
+              'Library',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           const SizedBox(width: 12),
-          Container(width: 1, height: 20, color: const Color(0xFF383330)),
+          Container(width: 1, height: 20, color: AppColors.border),
           const SizedBox(width: 12),
+
+          // Book Title
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 240),
             child: Text(
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: GoogleFonts.newsreader(
                 color: AppColors.textPrimary,
-                fontSize: 13,
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
+                fontStyle: FontStyle.italic,
               ),
             ),
           ),
           const SizedBox(width: 8),
+
+          // Format Badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: AppColors.primaryGlow,
+              color: badgeColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: AppColors.primary),
+              border: Border.all(color: badgeColor.withValues(alpha: 0.5)),
             ),
             child: Text(
-              format,
-              style: const TextStyle(color: AppColors.primaryHover, fontSize: 10, fontWeight: FontWeight.bold),
+              format.toUpperCase(),
+              style: GoogleFonts.plusJakartaSans(
+                color: badgeColor,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
 
           const Spacer(),
 
-          // Cluster 2 (Center): Theme Swatches, Layout, Font Size
-          _buildThemeBtn('day', const Color(0xFFFAFAF9), const Color(0xFFA8A29E), 'Day'),
+          // Center: Reading Canvas Theme Swatches
+          _buildThemeBtn('day', AppColors.dayBg, AppColors.dayBorder, 'Day'),
           const SizedBox(width: 4),
-          _buildThemeBtn('sepia', const Color(0xFFF5EBD7), const Color(0xFFB49B78), 'Sepia'),
+          _buildThemeBtn('sepia', AppColors.sepiaBg, AppColors.sepiaBorder, 'Sepia'),
           const SizedBox(width: 4),
-          _buildThemeBtn('night', const Color(0xFF121212), const Color(0xFF52525B), 'Night'),
+          _buildThemeBtn('night', AppColors.nightBg, AppColors.nightBorder, 'Night'),
           const SizedBox(width: 4),
-          _buildThemeBtn('darkSepia', const Color(0xFF251D16), const Color(0xFF634832), 'Dark Sepia'),
+          _buildThemeBtn('darkSepia', AppColors.darkSepiaBg, AppColors.darkSepiaBorder, 'Twilight'),
 
           const SizedBox(width: 12),
-          Container(width: 1, height: 20, color: const Color(0xFF383330)),
+          Container(width: 1, height: 20, color: AppColors.border),
           const SizedBox(width: 12),
 
           // 1 Page / 2 Pages Toggle
           OutlinedButton.icon(
             onPressed: onToggleTwoPages,
             style: OutlinedButton.styleFrom(
-              foregroundColor: isTwoPages ? const Color(0xFFFFEDD5) : const Color(0xFFD6D3D1),
-              backgroundColor: isTwoPages ? const Color(0xFF382A20) : const Color(0xFF24201E),
-              side: BorderSide(color: isTwoPages ? AppColors.primaryHover : const Color(0xFF3D3835)),
+              foregroundColor: isTwoPages ? const Color(0xFFFFEDD5) : AppColors.textSecondary,
+              backgroundColor: isTwoPages ? AppColors.primarySubtle : AppColors.surface,
+              side: BorderSide(color: isTwoPages ? AppColors.primaryHover : AppColors.border),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             ),
-            icon: Icon(isTwoPages ? Icons.auto_stories : Icons.menu_book, size: 14),
-            label: Text(isTwoPages ? '2 Pages' : '1 Page', style: const TextStyle(fontSize: 12)),
+            icon: Icon(
+              isTwoPages ? Icons.auto_stories : Icons.menu_book,
+              size: 14,
+              color: isTwoPages ? AppColors.primaryHover : AppColors.textSecondary,
+            ),
+            label: Text(
+              isTwoPages ? '2 Pages' : '1 Page',
+              style: GoogleFonts.plusJakartaSans(fontSize: 12, fontWeight: FontWeight.w500),
+            ),
           ),
 
           const SizedBox(width: 8),
@@ -126,9 +165,9 @@ class ReaderTopBar extends StatelessWidget {
           // Zoom Out (A-) / Zoom In (A+)
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xFF24201E),
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: const Color(0xFF3D3835)),
+              border: Border.all(color: AppColors.border),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -136,18 +175,32 @@ class ReaderTopBar extends StatelessWidget {
                 InkWell(
                   onTap: onZoomOut,
                   borderRadius: const BorderRadius.horizontal(left: Radius.circular(5)),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: Text('A-', style: TextStyle(color: Color(0xFFD6D3D1), fontSize: 12, fontWeight: FontWeight.w600)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    child: Text(
+                      'A-',
+                      style: GoogleFonts.plusJakartaSans(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
-                Container(width: 1, height: 16, color: const Color(0xFF3D3835)),
+                Container(width: 1, height: 16, color: AppColors.border),
                 InkWell(
                   onTap: onZoomIn,
                   borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: Text('A+', style: TextStyle(color: Color(0xFFD6D3D1), fontSize: 12, fontWeight: FontWeight.w600)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    child: Text(
+                      'A+',
+                      style: GoogleFonts.plusJakartaSans(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -156,14 +209,14 @@ class ReaderTopBar extends StatelessWidget {
 
           const Spacer(),
 
-          // Cluster 3 (Right): Contents, Search, Notes, Speech, Fullscreen
-          _buildActionBtn(Icons.list_alt, 'Contents', onToggleToc),
+          // Right: Table of Contents, Search, Notes, Read Aloud, Fullscreen
+          _buildActionBtn(Icons.list_alt, 'Table of Contents', onToggleToc),
           const SizedBox(width: 4),
-          _buildActionBtn(Icons.search, 'Search', onToggleSearch),
+          _buildActionBtn(Icons.search, 'Search Text', onToggleSearch),
           const SizedBox(width: 4),
-          _buildActionBtn(Icons.edit_note, 'Notes', onToggleNotes),
+          _buildActionBtn(Icons.edit_note, 'Notes & Highlights', onToggleNotes),
           const SizedBox(width: 4),
-          _buildActionBtn(Icons.volume_up_outlined, 'Read Aloud', onToggleTts),
+          _buildActionBtn(Icons.volume_up_outlined, 'Read Aloud (TTS)', onToggleTts),
           const SizedBox(width: 4),
           _buildActionBtn(Icons.fullscreen, 'Fullscreen', onToggleFullscreen),
         ],
@@ -179,9 +232,12 @@ class ReaderTopBar extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF382A20) : const Color(0xFF24201E),
+          color: isSelected ? AppColors.primarySubtle : AppColors.surface,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: isSelected ? AppColors.primaryHover : const Color(0xFF3D3835), width: isSelected ? 1.5 : 1.0),
+          border: Border.all(
+            color: isSelected ? AppColors.primaryHover : AppColors.border,
+            width: isSelected ? 1.5 : 1.0,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -198,8 +254,8 @@ class ReaderTopBar extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               label,
-              style: TextStyle(
-                color: isSelected ? const Color(0xFFFFEDD5) : const Color(0xFFA8A29E),
+              style: GoogleFonts.plusJakartaSans(
+                color: isSelected ? const Color(0xFFFFEDD5) : AppColors.textMuted,
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               ),
@@ -213,13 +269,13 @@ class ReaderTopBar extends StatelessWidget {
   Widget _buildActionBtn(IconData icon, String tooltip, VoidCallback onTap) {
     return IconButton(
       icon: Icon(icon, size: 16),
-      color: const Color(0xFFD6D3D1),
+      color: AppColors.textSecondary,
       tooltip: tooltip,
       style: IconButton.styleFrom(
-        backgroundColor: const Color(0xFF24201E),
+        backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
-          side: const BorderSide(color: Color(0xFF3D3835)),
+          side: const BorderSide(color: AppColors.border),
         ),
         padding: const EdgeInsets.all(8),
       ),

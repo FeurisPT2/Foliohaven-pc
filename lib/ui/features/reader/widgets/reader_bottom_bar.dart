@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:foliohaven_flutter/ui/core/constants/app_colors.dart';
 
 class ReaderBottomBar extends StatelessWidget {
@@ -21,7 +22,7 @@ class ReaderBottomBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       decoration: const BoxDecoration(
         color: AppColors.sidebarBg,
-        border: Border(top: BorderSide(color: Color(0xFF292524), width: 1)),
+        border: Border(top: BorderSide(color: AppColors.borderSubtle, width: 1)),
       ),
       child: Row(
         children: [
@@ -30,9 +31,9 @@ class ReaderBottomBar extends StatelessWidget {
             child: SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 activeTrackColor: AppColors.primaryHover,
-                inactiveTrackColor: const Color(0xFF383330),
+                inactiveTrackColor: AppColors.border,
                 trackHeight: 4.0,
-                thumbColor: Colors.white,
+                thumbColor: AppColors.textPrimary,
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6.0),
                 overlayColor: AppColors.primaryGlow,
                 overlayShape: const RoundSliderOverlayShape(overlayRadius: 14.0),
@@ -52,12 +53,20 @@ class ReaderBottomBar extends StatelessWidget {
           const SizedBox(width: 16),
 
           // Page & Percentage Badge
-          Text(
-            'Page $currentPage of $totalPages • ${pct.toInt()}%',
-            style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Text(
+              'Page $currentPage of $totalPages • ${pct.toInt()}%',
+              style: GoogleFonts.plusJakartaSans(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],

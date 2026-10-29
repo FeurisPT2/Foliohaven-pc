@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:foliohaven_flutter/domain/models/annotation.dart';
 import 'package:foliohaven_flutter/domain/models/bookmark.dart';
 import 'package:foliohaven_flutter/ui/core/constants/app_colors.dart';
@@ -52,9 +53,9 @@ class _NotesDrawerState extends State<NotesDrawer> {
                 children: [
                   const Icon(Icons.edit_note, color: AppColors.primary, size: 20),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'Bookmarks & Notes',
-                    style: TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       color: AppColors.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -68,7 +69,7 @@ class _NotesDrawerState extends State<NotesDrawer> {
                 ],
               ),
             ),
-            const Divider(color: Color(0xFF292524), height: 1),
+            const Divider(color: AppColors.borderSubtle, height: 1),
 
             // 4-Color Highlighter Palette Row
             Padding(
@@ -76,9 +77,9 @@ class _NotesDrawerState extends State<NotesDrawer> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'HIGHLIGHT PALETTE',
-                    style: TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       color: AppColors.textMuted,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -99,27 +100,31 @@ class _NotesDrawerState extends State<NotesDrawer> {
                       OutlinedButton.icon(
                         onPressed: widget.onExportHtml,
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: const BorderSide(color: Color(0xFF3D3835)),
+                          foregroundColor: AppColors.textPrimary,
+                          backgroundColor: AppColors.surface,
+                          side: const BorderSide(color: AppColors.border),
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                         ),
                         icon: const Icon(Icons.download, size: 14),
-                        label: const Text('Export', style: TextStyle(fontSize: 11)),
+                        label: Text(
+                          'Export',
+                          style: GoogleFonts.plusJakartaSans(fontSize: 11, fontWeight: FontWeight.w600),
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            const Divider(color: Color(0xFF292524), height: 1),
+            const Divider(color: AppColors.borderSubtle, height: 1),
 
             // Bookmarks section
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 4),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Text(
                 'BOOKMARKS',
-                style: TextStyle(
+                style: GoogleFonts.plusJakartaSans(
                   color: AppColors.textMuted,
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
@@ -130,8 +135,11 @@ class _NotesDrawerState extends State<NotesDrawer> {
             SizedBox(
               height: 120,
               child: widget.bookmarks.isEmpty
-                  ? const Center(
-                      child: Text('No bookmarks saved.', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                  ? Center(
+                      child: Text(
+                        'No bookmarks saved.',
+                        style: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 12),
+                      ),
                     )
                   : ListView.builder(
                       itemCount: widget.bookmarks.length,
@@ -142,9 +150,12 @@ class _NotesDrawerState extends State<NotesDrawer> {
                           leading: const Icon(Icons.bookmark, color: AppColors.primary, size: 16),
                           title: Text(
                             bm.title,
-                            style: const TextStyle(color: AppColors.textPrimary, fontSize: 12),
+                            style: GoogleFonts.plusJakartaSans(color: AppColors.textPrimary, fontSize: 12),
                           ),
-                          subtitle: Text('Page ${bm.page}', style: const TextStyle(color: AppColors.textMuted, fontSize: 10)),
+                          subtitle: Text(
+                            'Page ${bm.page}',
+                            style: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 10),
+                          ),
                           onTap: () {
                             Navigator.pop(context);
                             widget.onSelectPage(bm.page);
@@ -154,14 +165,14 @@ class _NotesDrawerState extends State<NotesDrawer> {
                     ),
             ),
 
-            const Divider(color: Color(0xFF292524), height: 1),
+            const Divider(color: AppColors.borderSubtle, height: 1),
 
             // Highlights & Annotations section
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 4),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Text(
                 'ANNOTATIONS',
-                style: TextStyle(
+                style: GoogleFonts.plusJakartaSans(
                   color: AppColors.textMuted,
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
@@ -171,8 +182,11 @@ class _NotesDrawerState extends State<NotesDrawer> {
             ),
             Expanded(
               child: widget.annotations.isEmpty
-                  ? const Center(
-                      child: Text('No annotations saved.', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                  ? Center(
+                      child: Text(
+                        'No annotations saved.',
+                        style: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 12),
+                      ),
                     )
                   : ListView.builder(
                       itemCount: widget.annotations.length,
@@ -184,7 +198,7 @@ class _NotesDrawerState extends State<NotesDrawer> {
                           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF24201E),
+                            color: AppColors.surface,
                             borderRadius: BorderRadius.circular(6),
                             border: Border(left: BorderSide(color: c, width: 3.5)),
                           ),
@@ -198,9 +212,9 @@ class _NotesDrawerState extends State<NotesDrawer> {
                               children: [
                                 Text(
                                   '"${a.text}"',
-                                  style: const TextStyle(
+                                  style: GoogleFonts.newsreader(
                                     color: AppColors.textPrimary,
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
@@ -208,13 +222,19 @@ class _NotesDrawerState extends State<NotesDrawer> {
                                   const SizedBox(height: 4),
                                   Text(
                                     a.note,
-                                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                                    style: GoogleFonts.plusJakartaSans(
+                                      color: AppColors.textSecondary,
+                                      fontSize: 11,
+                                    ),
                                   ),
                                 ],
                                 const SizedBox(height: 4),
                                 Text(
                                   'Page ${a.page}',
-                                  style: const TextStyle(color: AppColors.textMuted, fontSize: 10),
+                                  style: GoogleFonts.plusJakartaSans(
+                                    color: AppColors.textMuted,
+                                    fontSize: 10,
+                                  ),
                                 ),
                               ],
                             ),
@@ -241,7 +261,7 @@ class _NotesDrawerState extends State<NotesDrawer> {
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFF57534E), width: 1.5),
+            border: Border.all(color: AppColors.border, width: 1.5),
           ),
         ),
       ),

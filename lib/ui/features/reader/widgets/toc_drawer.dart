@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:foliohaven_flutter/domain/models/toc_item.dart';
 import 'package:foliohaven_flutter/ui/core/constants/app_colors.dart';
 
@@ -26,9 +27,9 @@ class TocDrawer extends StatelessWidget {
                 children: [
                   const Icon(Icons.list_alt, color: AppColors.primary, size: 20),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'Table of Contents',
-                    style: TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       color: AppColors.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -42,13 +43,13 @@ class TocDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(color: Color(0xFF292524), height: 1),
+            const Divider(color: AppColors.borderSubtle, height: 1),
             Expanded(
               child: tocItems.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
                         'No table of contents available.',
-                        style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                        style: GoogleFonts.plusJakartaSans(color: AppColors.textMuted, fontSize: 13),
                       ),
                     )
                   : ListView.builder(
@@ -62,15 +63,27 @@ class TocDrawer extends StatelessWidget {
                           dense: true,
                           title: Text(
                             item.title,
-                            style: TextStyle(
+                            style: GoogleFonts.plusJakartaSans(
                               color: item.level == 0 ? AppColors.textPrimary : AppColors.textSecondary,
                               fontWeight: item.level == 0 ? FontWeight.w600 : FontWeight.w400,
                               fontSize: item.level == 0 ? 13 : 12,
                             ),
                           ),
-                          trailing: Text(
-                            'p. ${item.pageIndex + 1}',
-                            style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: AppColors.border),
+                            ),
+                            child: Text(
+                              'p. ${item.pageIndex + 1}',
+                              style: GoogleFonts.plusJakartaSans(
+                                color: AppColors.textMuted,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                           onTap: () {
                             Navigator.pop(context);
