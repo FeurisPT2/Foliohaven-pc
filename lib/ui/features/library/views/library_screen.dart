@@ -401,18 +401,36 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: const Color(0xFF1E1A17),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: AppColors.border, width: 1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.12),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                child: Center(
-                  child: Text(
-                    'FH',
-                    style: GoogleFonts.newsreader(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(9),
+                  child: Image.asset(
+                    'assets/branding/app_logo.png',
+                    width: 38,
+                    height: 38,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: AppColors.primary,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'FH',
+                        style: GoogleFonts.newsreader(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                     ),
                   ),
                 ),
